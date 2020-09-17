@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    name: custom-metrics
+  name: custom-metrics
+spec:
+  finalizers:
+  - kubernetes

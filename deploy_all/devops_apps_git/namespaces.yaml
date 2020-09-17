@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: devops
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: velero
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jaeger
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prometheus
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kong
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-system
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    istio-injection: enabled
+  name: catalog-commons
+---
+kind: Namespace
+metadata:
+  labels:
+    istio-injection: enabled
+  name: assortment-commons
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    istio-injection: enabled
+  name: job
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    istio-injection: disabled
+  name: pricing-commons
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    istio-injection: enabled
+  name: util
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gitlab
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webdriver
+---
+

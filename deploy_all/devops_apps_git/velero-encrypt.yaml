@@ -1,0 +1,56 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"batch/v1beta1","kind":"CronJob","metadata":{"annotations":{},"labels":{"app":"devops-velero-encryption"},"name":"devops-velero-encryption","namespace":"devops"},"spec":{"jobTemplate":{"metadata":{"labels":{"app":"devops-velero-encryption"},"namespace":"devops"},"spec":{"template":{"metadata":{"labels":{"app":"devops-velero-encryption"}},"spec":{"affinity":{"nodeAffinity":{"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"cloud.google.com/gke-nodepool","operator":"In","values":["admin-gke-pool-qa"]}]}]}}},"containers":[{"env":[{"name":"GCS_BUCKET_URL","value":" gs://np-ca-merch-k8s-backup-qa/backups/"}],"image":"gcr.io/np-ca-merch/bucket-encrypter:1.0.0","name":"encrypter","volumeMounts":[{"mountPath":"/encryptionkey","name":"encryptionkey"}]}],"restartPolicy":"Never","tolerations":[{"key":"camerchrole","operator":"Equal","value":"admin"}],"volumes":[{"name":"encryptionkey","secret":{"secretName":"velero-encryption"}}]}}}},"schedule":"10 0 * * *","successfulJobsHistoryLimit":3}}
+  labels:
+    app: devops-velero-encryption
+  name: devops-velero-encryption
+  namespace: devops
+spec:
+  concurrencyPolicy: Allow
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: devops-velero-encryption
+      namespace: devops
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            app: devops-velero-encryption
+        spec:
+          containers:
+          - env:
+            - name: GCS_BUCKET_URL
+              value: ' gs://np-ca-merch-k8s-backup-qa/backups/'
+            image: gcr.io/np-ca-merch/bucket-encrypter:1.0.0
+            imagePullPolicy: IfNotPresent
+            name: encrypter
+            resources: {}
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+            volumeMounts:
+            - mountPath: /encryptionkey
+              name: encryptionkey
+          dnsPolicy: ClusterFirst
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          tolerations:
+          - key: camerchrole
+            operator: Equal
+            value: admin
+          volumes:
+          - name: encryptionkey
+            secret:
+              defaultMode: 420
+              secretName: velero-encryption
+  schedule: 10 * * * *
+  successfulJobsHistoryLimit: 3
+  suspend: false

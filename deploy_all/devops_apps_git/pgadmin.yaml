@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pgadmin
+  name: pgadmin
+  namespace: devops
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: pgadmin
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: null
+  name: devops-pgadmin
+  namespace: devops
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: pgadmin
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        app: pgadmin
+      name: devops-pgadmin
+      namespace: devops
+    spec:
+      containers:
+      - command:
+        - sh
+        - -c
+        - 'sed -ie ''s/ True/ False/'' /pgadmin4/config.py  && sed -ie ''s/paranoid
+          = /#paranoid = /'' /pgadmin4/pgadmin/__init__.py  && sed -ie ''s/paranoid.redirect_view
+          =/x =/'' /pgadmin4/pgadmin/__init__.py     &&  /entrypoint.sh '
+        env:
+        - name: PGADMIN_DEFAULT_EMAIL
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: pgadmin
+        - name: PGADMIN_DEFAULT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: pgadmin
+        - name: PGADMIN_PORT
+          value: '80'
+        - name: TZ
+          value: America/Toronto
+        - name: PGADMIN_SESSION_DISK_WRITE_DELAY
+          value: '0'
+        image: dpage/pgadmin4:4.15
+        name: pgadmin
+        ports:
+        - containerPort: 80
+          name: http
+      securityContext:
+        fsGroup: 1000
+      tolerations:
+      - key: camerchrole
+        operator: Equal
+        value: admin
