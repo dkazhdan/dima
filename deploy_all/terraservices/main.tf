@@ -185,3 +185,27 @@ resource "kong_route" "pgadmin-route" {
   service_id    = kong_service.pgadmin-service.id
 }
 
+
+
+resource "kong_service" "redis-service" {
+  name            = "redis-service"
+  protocol        = "http"
+  host            = var.redis-service-host
+  port            = 80
+  retries         = 5
+  connect_timeout = 1000
+  write_timeout   = 2000
+  read_timeout    = 3000
+}
+
+
+resource "kong_route" "redis-route" {
+  name          = "redis-route"
+  protocols     = ["http", "https"]
+  hosts         = formatlist("%s.${var.domain}", var.redis-route-host)
+  strip_path    = true
+  preserve_host = true
+  service_id    = kong_service.redis-service.id
+}
+
+

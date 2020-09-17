@@ -111,56 +111,21 @@ variable "pgadmin-route-host" {
 }
 
 
-variable "pricing-commons-service" {
+variable "redis-service-host" {
   type = string
 
-  default = "pricing-service-v2.pricing-commons.svc.cluster.local"
+  default = "redisconsole.devops.svc.cluster.local"
 
 }
 
 
-variable "pricing-service-v2-route" {
+variable "redis-route-host" {
   type = list(string)
 
 
-  default = ["api", "apidocs"]
+  default = ["redisconsole"]
 
 }
-
-variable "catalog-commons-service" {
-  type = string
-
-  default = "catalog-commons.catalog-commons.svc.cluster.local"
-
-}
-
-
-variable "catalog-commons-route" {
-  type = list(string)
-
-
-  default = ["apidocs", "api"]
-
-}
-
-
-variable "assortment-commons-service" {
-  type = string
-
-  default = "assortment-commons.assortment-commons.svc.cluster.local"
-
-}
-
-
-variable "assortment-commons-route" {
-  type = list(string)
-
-
-  default = ["apidocs", "api"]
-
-}
-
-
 
 
 variable "cert" {
